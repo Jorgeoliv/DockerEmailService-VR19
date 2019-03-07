@@ -7,6 +7,12 @@ passport.use('registo', new localStrategy({
     usernameField: 'email',
     passwordField: 'password'
 }, async (email, password, done) => {
+    console.log("EMAIL")
+    console.dir(email)
+
+    console.log("PASS")
+    console.dir(password)
+
     try{
         var user = await UserModel.create({email, password})
         return done(null, user)

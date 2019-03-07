@@ -22,8 +22,7 @@ router.get('/token', passport.authenticate('jwt', {session: false}), (req, res) 
 })
 
 //Devolve a lista de utilizadores
-router.get('/:uid', passport.authenticate('jwt', {session: false}),
-    (req, res) => {
+router.get('/:uid', passport.authenticate('jwt', {session: false}), (req, res) => {
         console.log('INFO DA SESSION!!!!!')
         console.dir(req.session)
         UserModel.findOne({email: req.params.uid})
@@ -33,10 +32,31 @@ router.get('/:uid', passport.authenticate('jwt', {session: false}),
 )
 
 //Registo de um utilizador
-router.post('/', passport.authenticate('registo', {session: false,
-    successRedirect: '/users/login',
-    failureRedirect: '/users'    
-}))
+// router.post('/', passport.authenticate('registo', {session: false,
+//     successRedirect: '/users/login',
+//     failureRedirect: '/users'    
+// }))
+
+router.post('/registo', function(req, res, next) {
+    console.log("Entrei no post de /api/users")
+    
+    passport.authenticate('registo', function(err, user, info){
+
+        if (err) 
+            return res.jsonp({erro: err, msg: "Repetido"})
+
+        if (!user)
+            return res.jsonp({erro: "Utilizador não existe"})
+        
+        console.log("Body no post de /api/users " + JSON.stringify(req.body))
+        console.log("Passport já atuou")
+        console.log("User : " + user)
+
+        res.redirect("/users/login")
+        
+        //return res.jsonp(user)
+    })(req, res, next);
+})
 
 //Login
 router.post('/login', async(req, res, next) => {

@@ -11,5 +11,8 @@ router.get('/login', function(req, res, next) {
 });
 
 
+router.get('/registo', function(req, res, next) {
+  res.render('registo')
+});
 
 module.exports = router;

@@ -1,0 +1,33 @@
+version: "2"
+
+services:
+  auth:
+    image: vr/auth
+    restart: always
+    ports:
+      - "3000:3000"
+    entrypoint: ["npm", "start"]  
+    depends_on:
+      - mongodb
+    networks: 
+      - redeAuthBD
+      
+  mongodb:
+    image: mongo
+    restart: always
+    container_name: mongodb
+    volumes:
+        - ./data-node:/data/db
+    ports:
+        - 27017:27017
+    command: mongod --noauth --smallfiles
+    networks:
+        - redeAuthBD
+              
+networks:
+    redeAuthBD:
+        driver: bridge
+    redeAuthComp:
+        driver: bridge
+    redeCompServEmail:
+        driver: bridge

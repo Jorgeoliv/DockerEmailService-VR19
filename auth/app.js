@@ -18,8 +18,10 @@ var usersRouter = require('./routes/users');
 
 var app = express();
 
+var containerName = "mongodb"
+
 //Base de dados
-mongoose.connect('mongodb://127.0.0.1:27017/dweb13', {useNewUrlParser: true})
+mongoose.connect('mongodb://' + containerName + ':27017/dweb13', {useNewUrlParser: true})
   .then(() => console.log('Mongo ready: ' + mongoose.connection.readyState))
   .catch(error => console.error('Erro conexao: ' + error))
 
