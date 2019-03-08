@@ -80,7 +80,7 @@ router.post('/login', async(req, res, next) => {
     })(req, res, next)
 })
 
-router.get('/info', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.get('/info', (req, res) => {
     console.log('RECEBEMOS O TOKEN :::::: =>>=>=>=>')
     console.dir(req.query.token)
     UserModel.findOne({token: req.query.token}, {email: 1, _id: 0})

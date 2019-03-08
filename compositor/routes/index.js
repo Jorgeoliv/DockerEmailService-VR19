@@ -14,7 +14,7 @@ router.get('/enviaEmail', function(req, res, next) {
   axios.get('http://localhost:3000/api/users/info?token=' + req.query.token)
     .then(mail =>{
       console.dir(mail)
-      res.jsonp('O email é: ' + mail.data)
+      res.render('compositor',{info: mail.data})
     })//recebe o mail com que o login foi feito
     .catch(erroVerificacao =>{
       console.log("ERRO NA CONFIRMAÇÃO DO TOKEN")
