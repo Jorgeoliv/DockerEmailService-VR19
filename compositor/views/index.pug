@@ -1,10 +1,6 @@
 extends layout
 block content
-
-  input.w3-btn(type='button' value='Login')
-
-  input.w3-input(type='text' name='email' placeholder='exemplo@teste.com')
-  input.w3-input(type='text' name='assunto' placeholder='Assunto...')
-  textarea.w3-input(id='texto' rows='10' cols='80')
-
-  input.w3-btn(id='send' type='button' value='Enviar!')
+  h1 Login
+  .w3-container
+    form.w3container(action="/login" method="POST")
+      input.w3-btn(type='button' value='login')

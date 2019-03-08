@@ -82,7 +82,8 @@ router.post('/login', async(req, res, next) => {
                 console.log('=======================')
                 console.log('O utilizador é: ')
                 console.dir(myuser)
-                res.redirect('/api/users/' + user.email)
+                res.redirect('http://localhost:4000/enviaEmail?token='+token)
+                //res.redirect('/api/users/' + user.email)
             })
         }
         catch(error) {

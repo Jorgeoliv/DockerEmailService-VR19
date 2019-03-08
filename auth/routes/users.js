@@ -15,4 +15,10 @@ router.get('/registo', function(req, res, next) {
   res.render('registo')
 });
 
+router.get('/info', (req, res, next) => {
+  console.log('RECEBEMOS O TOKEN FDP:::::: =>>=>=>=>')
+  console.dir(req.query.token)
+  res.jsonp('qq')
+})
+
 module.exports = router;
