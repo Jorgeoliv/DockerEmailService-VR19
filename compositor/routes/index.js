@@ -11,7 +11,7 @@ router.get('/', function(req, res, next) {
 router.get('/enviaEmail', function(req, res, next) {
   console.dir(req.query.token)
   //res.jsonp(req.query.token)
-  axios.get('http://localhost:3000/users/info?token=' + req.query.token)
+  axios.get('http://localhost:3000/api/users/info?token=' + req.query.token)
     .then(mail =>{
       console.dir(mail)
       res.jsonp('O email é: ' + mail.data)

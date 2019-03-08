@@ -3,33 +3,10 @@ const passport = require('passport')
 const jwt = require('jsonwebtoken')
 const UserModel = require('../../models/user')
 const axios = require('axios')
+const crypto = require('crypto');
+const sha256 = x => crypto.createHash('sha256').update(x, 'utf8').digest('hex');
 
 const router = express.Router()
-
-//Devolve a lista de utilizadores
-router.get('/', passport.authenticate('jwt', {session: false}),
-    (req, res) => {
-        UserModel.find()
-            .then(dados => res.jsonp(dados))
-            .catch(erro => res.status(500).send('Erro na istagem de utilizadores'))
-    }
-)
-
-
-router.get('/token', passport.authenticate('jwt', {session: false}), (req, res) => {
-    console.log('So para confirmar que entrei auqi')
-    res.jsonp(req.session.token)
-})
-
-//Devolve a lista de utilizadores
-router.get('/:uid', passport.authenticate('jwt', {session: false}), (req, res) => {
-        console.log('INFO DA SESSION!!!!!')
-        console.dir(req.session)
-        UserModel.findOne({email: req.params.uid})
-            .then(dados => res.jsonp(req.session.token))
-            .catch(erro => res.status(500).send('Erro na istagem de utilizadores'))
-    }
-)
 
 //Registo de um utilizador
 // router.post('/', passport.authenticate('registo', {session: false,
@@ -77,19 +54,39 @@ router.post('/login', async(req, res, next) => {
                 var myuser = {_id: user._id, email: user.email}
                 var token = jwt.sign({user: myuser}, 'dweb2018')
                 req.session.token = token
-                console.log('O token é: ' + token)
-                console.dir(token)
-                console.log('=======================')
-                console.log('O utilizador é: ')
-                console.dir(myuser)
-                res.redirect('http://localhost:4000/enviaEmail?token='+token)
-                //res.redirect('/api/users/' + user.email)
+
+                token = sha256(token)
+
+                UserModel.findOneAndUpdate({email: user.email}, {token: token})
+                .then(_ =>{
+                    // console.log('O token é: ' + token)
+                    // console.dir(token)
+                    // console.log('=======================')
+                    // console.log('O utilizador é: ')
+                    // console.dir(myuser)
+                    res.redirect('http://localhost:4000/enviaEmail?token='+token)
+                    //res.redirect('/api/users/' + user.email)
+                })
+                .catch(erroToken =>{
+                    console.log("ERRO AO INSERIR TOKEN")
+                    res.redirect('http://localhost:4000/enviaEmail')
+                })
+
             })
         }
         catch(error) {
             return next(error)
         }
     })(req, res, next)
+})
+
+router.get('/info', passport.authenticate('jwt', {session: false}), (req, res) => {
+    console.log('RECEBEMOS O TOKEN :::::: =>>=>=>=>')
+    console.dir(req.query.token)
+    UserModel.findOne({token: req.query.token}, {email: 1, _id: 0})
+        .then(email => res.jsonp(email))
+        .catch(erro => res.status(500).send('Erro na istagem de utilizadores ' + erro))
+    
 })
 
 module.exports = router
