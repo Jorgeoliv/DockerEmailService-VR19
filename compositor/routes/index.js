@@ -12,7 +12,8 @@ router.get('/enviaEmail', function(req, res, next) {
   console.dir(req.query.token)
   //res.jsonp(req.query.token)
   console.log('VOU ENVIAR O EMAILLLLLL!!')
-  axios.get('http://localhost:3000/api/users/info?token=' + req.query.token)
+  const containerAuth = "dockeremailservice-vr19_auth_1"
+  axios.get('http://' + containerAuth + ':3000/api/users/info?token=' + req.query.token)
     .then(mail =>{
       console.dir(mail)
       res.render('compositor',{info: mail.data})

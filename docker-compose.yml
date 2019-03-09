@@ -1,16 +1,26 @@
 version: "2"
 
 services:
+  compositor:
+    image: vr/compositor
+    restart: always
+    ports:
+      - "4000:4000"
+    #entrypoint: ["npm", "start"]
+    networks: 
+      - redeAuthComp
+
   auth:
     image: vr/auth
     restart: always
     ports:
       - "3000:3000"
-    entrypoint: ["npm", "start"]  
+    #entrypoint: ["npm", "start"]  
     depends_on:
       - mongodb
     networks: 
       - redeAuthBD
+      - redeAuthComp
 
   mongodb:
     image: mongo
