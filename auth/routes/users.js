@@ -5,7 +5,7 @@ const UserModel = require('../models/user')
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+  res.render('index');
 });
 
 router.get('/login', function(req, res, next) {

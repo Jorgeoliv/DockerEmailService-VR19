@@ -5,19 +5,20 @@ const querystring = require('querystring')
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.redirect('http://localhost:3000/users/login')
+  res.redirect('http://localhost:3000/users')
 });
 
 router.get('/enviaEmail', function(req, res, next) {
   console.dir(req.query.token)
   //res.jsonp(req.query.token)
+  console.log('VOU ENVIAR O EMAILLLLLL!!')
   axios.get('http://localhost:3000/api/users/info?token=' + req.query.token)
     .then(mail =>{
       console.dir(mail)
       res.render('compositor',{info: mail.data})
     })//recebe o mail com que o login foi feito
     .catch(erroVerificacao =>{
-      console.log("ERRO NA CONFIRMAÇÃO DO TOKEN")
+      console.log("ERRO NA CONFIRMAÇÃO DO TOKEN:" + erroVerificacao)
     })
 });
 
