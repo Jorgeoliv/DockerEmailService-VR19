@@ -4,6 +4,8 @@ const axios = require('axios')
 const querystring = require('querystring')
 const nodemailer = require('nodemailer')
 
+const containerAuth = "autenticacao"
+
 const transporter = nodemailer.createTransport({
     // In Node, environment variables are available on process.env
     host: process.env.MAILDEV_PORT_25_TCP_ADDR, // ex. 172.17.0.10
@@ -26,7 +28,6 @@ router.get('/enviaEmail', function(req, res, next) {
   console.dir(req.query.token)
   //res.jsonp(req.query.token)
   console.log('VOU ENVIAR O EMAILLLLLL!!')
-  const containerAuth = "dockeremailservice-vr19_auth_1"
   axios.get('http://' + containerAuth + ':3000/api/users/info?token=' + req.query.token)
     .then(mail =>{
       console.dir(mail)

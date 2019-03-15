@@ -4,15 +4,20 @@ services:
   compositor:
     image: vr/compositor
     restart: always
+    container_name: servidoremail
     ports:
       - "4000:4000"
+    depends_on:
+      - mail
     #entrypoint: ["npm", "start"]
     networks: 
       - redeAuthComp
+      - redeCompServEmail
 
   auth:
     image: vr/auth
     restart: always
+    container_name: autenticacao
     ports:
       - "3000:3000"
     #entrypoint: ["npm", "start"]  
@@ -33,6 +38,15 @@ services:
     command: mongod --noauth --smallfiles
     networks:
         - redeAuthBD
+  
+  mail:
+    image: djfarrelly/maildev
+    restart: always
+    container_name: maildev
+    ports:
+        - 1080:80
+    networks:
+        - redeCompServEmail
             
 networks:
     redeAuthBD:
