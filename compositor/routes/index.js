@@ -4,7 +4,7 @@ const axios = require('axios')
 const querystring = require('querystring')
 const nodemailer = require('nodemailer')
 
-const containerAuth = "autenticacao"
+const containerAuth = "localhost"
 
 const transporter = nodemailer.createTransport({
     // In Node, environment variables are available on process.env
@@ -30,6 +30,9 @@ router.get('/enviaEmail', function(req, res, next) {
   console.log('VOU ENVIAR O EMAILLLLLL!!')
   axios.get('http://' + containerAuth + ':3000/api/users/info?token=' + req.query.token)
     .then(mail =>{
+      var mailOriginal = mail.data
+      var mailLocal = mailOriginal.split("@")[0] + "@vr-2.gcom.di.uminho.pt"
+      console.log(mailLocal)
       console.dir(mail)
       res.render('compositor',{info: mail.data})
     })//recebe o mail com que o login foi feito
@@ -38,23 +41,23 @@ router.get('/enviaEmail', function(req, res, next) {
     })
 });
 
-router.get('/teste', (req, res) => {
+// router.get('/teste', (req, res) => {
 
-  let mailOptions = {
-    from: 'jorge10oliveira@gmail.com', // sender address
-    to: 'jorge10oliveira@gmail.com', // list of receivers
-    subject: 'Subject of your email', // Subject line
-    html: '<p>Your html here</p>'// plain text body
-  }
+//   let mailOptions = {
+//     from: 'jorge10oliveira@gmail.com', // sender address
+//     to: 'jorge10oliveira@gmail.com', // list of receivers
+//     subject: 'Subject of your email', // Subject line
+//     html: '<p>Your html here</p>'// plain text body
+//   }
 
-  // Now when your send an email, it will show up in the MailDev interface
-  transporter.sendMail(mailOptions, (error, info) => {
-    if(error)
-      console.log(error)
-    else
-      console.log(info)
-  })
-})
+//   // Now when your send an email, it will show up in the MailDev interface
+//   transporter.sendMail(mailOptions, (error, info) => {
+//     if(error)
+//       console.log(error)
+//     else
+//       console.log(info)
+//   })
+// })
 
 // axios.get('http://localhost:3000/users/info?token=' + req.query.token)
 // .then(mail =>{
