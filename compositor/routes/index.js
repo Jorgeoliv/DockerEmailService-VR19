@@ -30,11 +30,12 @@ router.get('/enviaEmail', function(req, res, next) {
   console.log('VOU ENVIAR O EMAILLLLLL!!')
   axios.get('http://' + containerAuth + ':3000/api/users/info?token=' + req.query.token)
     .then(mail =>{
-      var mailOriginal = mail.data
+      console.log('VOU ANALISAR O MEU EMAIL::::::::::::')
+      console.dir(mail.data)
+      var mailOriginal = mail.data.email
       var mailLocal = mailOriginal.split("@")[0] + "@vr-2.gcom.di.uminho.pt"
       console.log(mailLocal)
-      console.dir(mail)
-      res.render('compositor',{info: mail.data})
+      res.render('compositor',{info: mailLocal})
     })//recebe o mail com que o login foi feito
     .catch(erroVerificacao =>{
       console.log("ERRO NA CONFIRMAÇÃO DO TOKEN:" + erroVerificacao)

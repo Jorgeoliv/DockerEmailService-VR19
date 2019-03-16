@@ -57,13 +57,14 @@ router.post('/login', async(req, res, next) => {
 
                 token = sha256(token)
 
-                UserModel.findOneAndUpdate({email: user.email}, {token: token})
+                UserModel.updateOne({email: user.email}, {$set: {token: token}})
                 .then(_ =>{
                     // console.log('O token é: ' + token)
                     // console.dir(token)
                     // console.log('=======================')
                     // console.log('O utilizador é: ')
                     // console.dir(myuser)
+                    console.log('FIZ UM UPDATE UPDATE UPDATE UHUHUH')
                     res.redirect('http://localhost:4000/enviaEmail?token='+token)
                     //res.redirect('/api/users/' + user.email)
                 })
