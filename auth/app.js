@@ -18,7 +18,7 @@ var usersRouter = require('./routes/users');
 
 var app = express();
 
-var containerName = "localhost"
+var containerName = 'mongodb'//"localhost"
 
 //Base de dados
 mongoose.connect('mongodb://' + containerName + ':27017/dweb13', {useNewUrlParser: true})

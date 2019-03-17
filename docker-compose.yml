@@ -7,8 +7,6 @@ services:
     container_name: servidoremail
     ports:
       - "4000:4000"
-    depends_on:
-      - mail
     #entrypoint: ["npm", "start"]
     networks: 
       - redeAuthComp
@@ -39,7 +37,7 @@ services:
     networks:
         - redeAuthBD
   
-  mail:
+  maildev:
     image: djfarrelly/maildev
     restart: always
     container_name: maildev

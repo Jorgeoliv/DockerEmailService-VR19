@@ -4,12 +4,13 @@ const axios = require('axios')
 const querystring = require('querystring')
 const nodemailer = require('nodemailer')
 
-const containerAuth = "localhost"
+const containerAuth = 'autenticacao'//"localhost"
+const containerMailDev = 'maildev'
 
 const transporter = nodemailer.createTransport({
     // In Node, environment variables are available on process.env
-    host: process.env.MAILDEV_PORT_25_TCP_ADDR, // ex. 172.17.0.10
-    port: process.env.MAILDEV_PORT_25_TCP_PORT, // ex. 25
+    host: containerMailDev,//process.env.MAILDEV_PORT_25_TCP_ADDR, // ex. 172.17.0.10
+    port: 25,//process.env.MAILDEV_PORT_25_TCP_PORT, // ex. 25
     // We add this setting to tell nodemailer the host isn't secure during dev:
     ignoreTLS: true
     // service: 'gmail',
@@ -39,8 +40,34 @@ router.get('/enviaEmail', function(req, res, next) {
     })//recebe o mail com que o login foi feito
     .catch(erroVerificacao =>{
       console.log("ERRO NA CONFIRMAÇÃO DO TOKEN:" + erroVerificacao)
+      res.render('error', {message: 'A autenticação não é válida ...'})
     })
 });
+
+router.post('/enviaEmail', (req, res) => {
+  console.log('VOU ENVIAR UM EMAIL!!!')
+  console.dir(req.body)
+
+  let mailOptions = {
+    from: req.body.from, // sender address
+    to: req.body.email, // list of receivers
+    subject: req.body.assunto, // Subject line
+    html: '<p>' + req.body.texto + '</p>'// plain text body
+  }
+
+  // Now when your send an email, it will show up in the MailDev interface
+  transporter.sendMail(mailOptions, (error, info) => {
+    if(error){
+      console.log(error)
+      res.render('error', {message: 'Erro ao enviar o email! Tente novamente mais tarde ...'})
+    }
+    else{
+      console.log(info)
+      res.render('sucesso')
+    }
+  })
+
+})
 
 // router.get('/teste', (req, res) => {
 
