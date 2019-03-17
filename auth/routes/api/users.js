@@ -20,10 +20,10 @@ router.post('/registo', function(req, res, next) {
     passport.authenticate('registo', function(err, user, info){
 
         if (err) 
-            return res.jsonp({erro: err, msg: "Repetido"})
+            return next(new Error("Utilizador já se encontra registado!"))
 
         if (!user)
-            return res.jsonp({erro: "Utilizador não existe"})
+            return res.jsonp(new Error("Erro no registo do utilizador! Tente novamente mais tarde ..."))
         
         console.log("Body no post de /api/users " + JSON.stringify(req.body))
         console.log("Passport já atuou")
@@ -44,12 +44,12 @@ router.post('/login', async(req, res, next) => {
         try{
             if(err || !user){
                 if(err)
-                    return next(error)
+                    return next(new Error('Erro na autenticação! Tente novamente mais tarde ...'))
                 else
-                    return next(new Error('Utilizador inexistente'))
+                    return next(new Error('Utilizador inexistente ...'))
             }
             req.login(user, {session: false}, async (error) => {
-                if(error) return next(error)
+                if(error) return next(new Error('Erro no login! Tente novamente mais tarde ...'))
                 //vou usar isto como payload
                 var myuser = {_id: user._id, email: user.email}
                 var token = jwt.sign({user: myuser}, 'dweb2018')
@@ -76,7 +76,7 @@ router.post('/login', async(req, res, next) => {
             })
         }
         catch(error) {
-            return next(error)
+            return next(new Error('Erro na autenticação! Tente novamente mais tarde ...'))
         }
     })(req, res, next)
 })
