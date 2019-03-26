@@ -15,7 +15,7 @@ services:
       - redeNginxEmail
 
   servidoremail:
-    image: jorgeoliv/vr2_servicoemail
+    image: vr/compositor #jorgeoliv/vr2_servicoemail
     restart: always
     container_name: servidoremail
     ports:
@@ -27,7 +27,7 @@ services:
       - redeNginxEmail
 
   autenticacao:
-    image: jorgeoliv/vr2_autenticacao
+    image: vr/auth #jorgeoliv/vr2_autenticacao
     restart: always
     container_name: autenticacao
     ports:

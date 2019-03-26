@@ -29,7 +29,7 @@ router.post('/registo', function(req, res, next) {
         console.log("Passport já atuou")
         console.log("User : " + user)
 
-        res.redirect("/users/login")
+        res.redirect("/s1/users/login")
         
         //return res.jsonp(user)
     })(req, res, next);
@@ -59,18 +59,17 @@ router.post('/login', async(req, res, next) => {
 
                 UserModel.updateOne({email: user.email}, {$set: {token: token}})
                 .then(_ =>{
-                    // console.log('O token é: ' + token)
-                    // console.dir(token)
-                    // console.log('=======================')
-                    // console.log('O utilizador é: ')
-                    // console.dir(myuser)
                     console.log('FIZ UM UPDATE UPDATE UPDATE UHUHUH')
+                    /*
+                    ESTAVA ASSIM!!!
                     res.redirect('http://localhost:4000/enviaEmail?token='+token)
-                    //res.redirect('/api/users/' + user.email)
+                    */
+                   res.redirect('http://localhost:80/s2/enviaEmail?token='+token)
                 })
                 .catch(erroToken =>{
                     console.log("ERRO AO INSERIR TOKEN")
-                    res.redirect('http://localhost:4000/enviaEmail')
+                    //res.redirect('http://localhost:4000/enviaEmail')
+                    res.redirect('http://localhost:80/s2/enviaEmail')
                 })
 
             })

@@ -22,14 +22,15 @@ const transporter = nodemailer.createTransport({
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.redirect('http://localhost:3000/users')
+  //res.redirect('http://localhost:3000/users')
+  res.redirect('http://localhost:80/s1/users')
 });
 
 router.get('/enviaEmail', function(req, res, next) {
   console.dir(req.query.token)
   //res.jsonp(req.query.token)
   console.log('VOU ENVIAR O EMAILLLLLL!!')
-  axios.get('http://' + containerAuth + ':3000/api/users/info?token=' + req.query.token)
+  axios.get('http://' + containerAuth + ':3000/s1/api/users/info?token=' + req.query.token)
     .then(mail =>{
       console.log('VOU ANALISAR O MEU EMAIL::::::::::::')
       console.dir(mail.data)
