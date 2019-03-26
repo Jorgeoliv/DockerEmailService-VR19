@@ -1,8 +1,21 @@
-version: "2"
+version: "3.2"
 
 services:
-  compositor:
-    image: vr/compositor
+  nginx: 
+    image: reverseproxy
+    container_name: nginx
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - autenticacao
+      - servidoremail
+    networks: 
+      - redeNginxAuth
+      - redeNginxEmail
+
+  servidoremail:
+    image: jorgeoliv/vr2_servicoemail
     restart: always
     container_name: servidoremail
     ports:
@@ -11,9 +24,10 @@ services:
     networks: 
       - redeAuthComp
       - redeCompServEmail
+      - redeNginxEmail
 
-  auth:
-    image: vr/auth
+  autenticacao:
+    image: jorgeoliv/vr2_autenticacao
     restart: always
     container_name: autenticacao
     ports:
@@ -24,15 +38,21 @@ services:
     networks: 
       - redeAuthBD
       - redeAuthComp
+      - redeNginxAuth
 
   mongodb:
     image: mongo
     restart: always
     container_name: mongodb
     volumes:
-        - ./data-node:/data/db
+      - type: volume
+        source: mongoVolume
+        target: /data/db #/var/lib/mongodb/data
+      # - type: bind
+      #   source: ./data/db
+      #   target: /data/db
     ports:
-        - 27017:27017
+        - 27018:27017
     command: mongod --noauth --smallfiles
     networks:
         - redeAuthBD
@@ -53,3 +73,12 @@ networks:
         driver: bridge
     redeCompServEmail:
         driver: bridge
+    redeNginxAuth:
+      driver: bridge
+    redeNginxEmail:
+      driver: bridge
+
+volumes:
+  mongoVolume:
+    driver: local
+#     #dst: /data/db
