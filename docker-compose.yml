@@ -30,6 +30,12 @@ services:
     image: vr/auth #jorgeoliv/vr2_autenticacao
     restart: always
     container_name: autenticacao
+    # volumes:
+    #   - type: volume
+    #     source: ./mydata
+    #     target: mongoVolume
+    #     volume:
+    #       nocopy: true
     ports:
       - "3000:3000"
     #entrypoint: ["npm", "start"]  
@@ -45,12 +51,13 @@ services:
     restart: always
     container_name: mongodb
     volumes:
-      - type: volume
-        source: mongoVolume
-        target: /data/db #/var/lib/mongodb/data
+      # # - type: volume
+      # #   source: mongoVolume
+      # #   target: /data/db #/var/lib/mongodb/data
       # - type: bind
-      #   source: ./data/db
+      #   source: mongoVolume
       #   target: /data/db
+      - mongoVolume:/data/db
     ports:
         - 27018:27017
     command: mongod --noauth --smallfiles
@@ -80,5 +87,6 @@ networks:
 
 volumes:
   mongoVolume:
-    driver: local
+    # driver: local
+  mydata:
 #     #dst: /data/db

@@ -6,6 +6,8 @@ const axios = require('axios')
 const crypto = require('crypto');
 const sha256 = x => crypto.createHash('sha256').update(x, 'utf8').digest('hex');
 
+const fs = require('fs')
+
 const router = express.Router()
 
 //Registo de um utilizador
@@ -88,5 +90,17 @@ router.get('/info', (req, res) => {
         .catch(erro => res.status(500).send('Erro na istagem de utilizadores ' + erro))
     
 })
+
+router.get('/s1/stylesheets/style.css', (req, res) => {
+    console.log('OLha eu aqui!!!')
+    console.log(__dirname + '../public/stylesheets/w3.css')
+    fs.readFile(__dirname + '/../public/stylesheets/style.css', (erro,dados) => {
+      if(!erro)
+          res.write(dados)
+      else
+          console.log('<p><b>Erro: </b> ' + erro + '</p>')
+      res.end()    
+    })
+  })
 
 module.exports = router
