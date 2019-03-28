@@ -87,6 +87,10 @@ networks:
 
 volumes:
   mongoVolume:
-    # driver: local
-  mydata:
-#     #dst: /data/db
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/$USER/Desktop/data_mongo/
+      o: bind
+#   mydata:
+# #     #dst: /data/db
