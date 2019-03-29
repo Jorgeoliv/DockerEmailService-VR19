@@ -5,8 +5,8 @@ block content
   h1 Autenticação
   .w3-container
     form.w3container(id="myForm" action="/s2/enviaEmail" method="POST")
-      input.w3-input(type='email' name='email' placeholder='exemplo@teste.com' required)
-      input.w3-input(type='text' name='assunto' placeholder='Assunto' required)
+      input.w3-input.w3-border-w3.light-grey(type='email' name='email' placeholder='exemplo@teste.com' required)
+      input.w3-input.w3-border-w3.light-grey(type='text' name='assunto' placeholder='Assunto' required)
       textarea.w3-input.w3-border.w3-light-grey(name='texto' id='texto' rows='3' cols='80')
-      input.w3-input(type='hidden' id='from' name='from' value= info)
-      input.w3-btn(type="submit" value="Enviar!")
+      input.w3-input.w3-border-w3.light-grey(type='hidden' id='from' name='from' value= info)
+      input.w3-btn.w3-blue-grey(type="submit" value="Enviar!")
