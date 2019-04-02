@@ -69,7 +69,7 @@ services:
     restart: always
     container_name: maildev
     ports:
-        - 1080:80
+        - 25:25
     networks:
         - redeCompServEmail
             
