@@ -62,16 +62,11 @@ router.post('/login', async(req, res, next) => {
                 UserModel.updateOne({email: user.email}, {$set: {token: token}})
                 .then(_ =>{
                     console.log('FIZ UM UPDATE UPDATE UPDATE UHUHUH')
-                    /*
-                    ESTAVA ASSIM!!!
-                    res.redirect('http://localhost:4000/enviaEmail?token='+token)
-                    */
-                   res.redirect('http://localhost:80/s2/enviaEmail?token='+token)
+                   res.redirect('http://' + req.hostname + ':80/s2/enviaEmail?token='+token)
                 })
                 .catch(erroToken =>{
                     console.log("ERRO AO INSERIR TOKEN")
-                    //res.redirect('http://localhost:4000/enviaEmail')
-                    res.redirect('http://localhost:80/s2/enviaEmail')
+                    res.redirect('http://' + req.hostname + ':80/s2/enviaEmail')
                 })
 
             })
@@ -82,12 +77,33 @@ router.post('/login', async(req, res, next) => {
     })(req, res, next)
 })
 
+router.post('/logout', async(req, res, next) => {
+    if(req.body.email && req.body.token && req.body.token != ""){
+        UserModel.findOne({email: req.body.email, token: req.body.token})
+                .then(user =>{
+                    UserModel.updateOne({email: req.body.email}, {$set: {token: ""}})
+                    .then(_ =>{
+                        console.log('FIZ UM LOGOUT')
+                        res.redirect('http://' + req.hostname + ':80/s2')
+                    })
+                    .catch(erroToken =>{
+                        console.log("ERRO AO FAZER LOGOUT")
+                        res.redirect('http://' + req.hostname + ':80/s2')
+                    })
+                })
+                .catch()
+    }
+})
+
 router.get('/info', (req, res) => {
-    console.log('RECEBEMOS O TOKEN :::::: =>>=>=>=>')
-    console.dir(req.query.token)
-    UserModel.findOne({token: req.query.token}, {email: 1, _id: 0})
-        .then(email => res.jsonp(email))
-        .catch(erro => res.status(500).send('Erro na istagem de utilizadores ' + erro))
+    
+    if(req.query.token && req.query.token != ""){
+        console.log('RECEBEMOS O TOKEN :::::: =>>=>=>=>')
+        console.dir(req.query.token)
+        UserModel.findOne({token: req.query.token}, {email: 1, _id: 0})
+            .then(email => res.jsonp(email))
+            .catch(erro => res.status(500).send('Erro na istagem de utilizadores ' + erro))
+    }
     
 })
 

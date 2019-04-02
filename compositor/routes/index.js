@@ -23,7 +23,8 @@ const transporter = nodemailer.createTransport({
 /* GET home page. */
 router.get('/', function(req, res, next) {
   //res.redirect('http://localhost:3000/users')
-  res.redirect('http://localhost:80/s1/users')
+  console.log('VAMOS VER: ' + req.hostname)
+  res.redirect('http://' + req.hostname + ':80/s1/users')
 });
 
 router.get('/enviaEmail', function(req, res, next) {
