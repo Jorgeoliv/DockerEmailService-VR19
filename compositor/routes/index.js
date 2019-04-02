@@ -3,6 +3,7 @@ var router = express.Router();
 const axios = require('axios')
 const querystring = require('querystring')
 const nodemailer = require('nodemailer')
+const HistoricoModel = require('../models/historico')
 
 const containerAuth = 'autenticacao'//"localhost"
 const containerMailDev = 'maildev'
@@ -38,7 +39,19 @@ router.get('/enviaEmail', function(req, res, next) {
       var mailOriginal = mail.data.email
       var mailLocal = mailOriginal.split("@")[0] + "@vr-2.gcom.di.uminho.pt"
       console.log(mailLocal)
-      res.render('compositor',{info: mailLocal})
+      HistoricoModel.aggregate([
+        {$group: {_id: "$mails.to"}}
+      ])
+        .then(dados => {
+          console.log("VAMOS VER O QUE DEU NO AGGREGATE")
+          console.dir(dados)
+          res.render('compositor',{info: mailLocal})
+        })
+        .catch(error => {
+          console.log("Deu erro no aggregate: " + error)
+          res.render('compositor',{info: mailLocal})
+        })
+      
     })//recebe o mail com que o login foi feito
     .catch(erroVerificacao =>{
       console.log("ERRO NA CONFIRMAÇÃO DO TOKEN:" + erroVerificacao)
@@ -65,7 +78,22 @@ router.post('/enviaEmail', (req, res) => {
     }
     else{
       console.log(info)
-      res.render('sucesso')
+      emailS = {}
+      emailS.to = mailOptions.to
+      emailS.subject = mailOptions.subject
+      emailS.body = req.body.texto
+      console.log("Vou analisar o objeto:")
+      console.dir(emailS)
+      HistoricoModel.findOneAndUpdate({email: mailOptions.from}, {$push: {mails: emailS}}, {upsert: true, new: true})
+        .then(resultado => {
+          console.log("ELE INSERIU NA BASE DE DADOS!: " + resultado)
+          res.render('sucesso')
+        })
+        .catch(error => {
+          console.log("Nao inseriu na base de dados: " + error)
+          res.render('sucesso')
+        })
+      
     }
   })
 

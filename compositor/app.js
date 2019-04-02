@@ -1,4 +1,5 @@
 var createError = require('http-errors');
+const mongoose = require('mongoose')
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
@@ -6,7 +7,13 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 
+const containerName = "historicdb"
+
 var app = express();
+
+mongoose.connect('mongodb://' + containerName + ':27017/compositor', {useNewUrlParser: true})
+  .then(() => console.log('Mongo ready: ' + mongoose.connection.readyState))
+  .catch(error => console.error('Erro conexao: ' + error))
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

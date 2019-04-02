@@ -22,11 +22,14 @@ services:
     container_name: servidoremail
     ports:
       - "4000:4000"
+    depends_on:
+      - historicdb
     #entrypoint: ["npm", "start"]
     networks: 
       - redeAuthComp
       - redeCompServEmail
       - redeNginxEmail
+      - redeCompHist
 
   autenticacao:
     image: vr/auth #jorgeoliv/vr2_autenticacao
@@ -65,6 +68,24 @@ services:
     command: mongod --noauth --smallfiles
     networks:
         - redeAuthBD
+
+  historicdb:
+    image: mongo
+    restart: always
+    container_name: historicdb
+    volumes:
+      # # - type: volume
+      # #   source: mongoVolume
+      # #   target: /data/db #/var/lib/mongodb/data
+      # - type: bind
+      #   source: mongoVolume
+      #   target: /data/db
+      - historicVolume:/data/db
+    ports:
+        - 27019:27017
+    command: mongod --noauth --smallfiles
+    networks:
+        - redeCompHist
   
   maildev:
     image: djfarrelly/maildev
@@ -86,6 +107,8 @@ networks:
       driver: bridge
     redeNginxEmail:
       driver: bridge
+    redeCompHist:
+      driver: bridge
 
 volumes:
   mongoVolume:
@@ -93,6 +116,12 @@ volumes:
     driver_opts:
       type: none
       device: /home/$USER/Desktop/data_mongo/
+      o: bind
+  historicVolume:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/$USER/Desktop/data_historic/
       o: bind
 #   mydata:
 # #     #dst: /data/db
