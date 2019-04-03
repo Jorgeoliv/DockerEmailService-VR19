@@ -78,19 +78,20 @@ router.post('/login', async(req, res, next) => {
 
 router.post('/logout', async(req, res, next) => {
     if(req.body.email && req.body.token && req.body.token != ""){
-        UserModel.findOne({email: req.body.email, token: req.body.token})
-                .then(user =>{
-                    UserModel.updateOne({email: req.body.email}, {$set: {token: ""}})
-                    .then(_ =>{
-                        console.log('FIZ UM LOGOUT')
+        // UserModel.findOne({email: req.body.email, token: req.body.token})
+        //         .then(user =>{
+                    UserModel.updateOne({email: req.body.email, token: req.body.token}, {$set: {token: ""}})
+                    .then(dados =>{
+                        console.log('FIZ UM LOGOUT: ')
+                        console.dir(dados)
                         res.jsonp("Logout feito com sucesso")
                     })
                     .catch(erroToken =>{
                         console.log("ERRO AO FAZER LOGOUT")
                         res.jsonp("Erro ao fazer Logout")
                     })
-                })
-                .catch()
+                // })
+                // .catch()
     }
 })
 
@@ -108,17 +109,5 @@ router.get('/info', (req, res) => {
     }
     
 })
-
-router.get('/s1/stylesheets/style.css', (req, res) => {
-    console.log('OLha eu aqui!!!')
-    console.log(__dirname + '../public/stylesheets/w3.css')
-    fs.readFile(__dirname + '/../public/stylesheets/style.css', (erro,dados) => {
-      if(!erro)
-          res.write(dados)
-      else
-          console.log('<p><b>Erro: </b> ' + erro + '</p>')
-      res.end()    
-    })
-  })
 
 module.exports = router

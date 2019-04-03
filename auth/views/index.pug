@@ -1,11 +1,11 @@
 extends layout
 
 block content
-  h1 Registo
-    .w3-container
+  h3 Registo
+    .w3-container.w3-teal
         form.w3container(action="/s1/users/registo" method="GET")
-            input.w3-btn.w3-blue-grey(type="submit" value="registo")
-  h1 Autenticação
-    .w3-container
+          input.w3-btn.w3-blue-grey(type="submit" value="registo")
+  h3 Autenticação
+    .w3-container.w3-teal
         form.w3container(action="/s1/users/login" method="GET")
-            input.w3-btn.w3-blue-grey(type="submit" value="login")
+          input.w3-btn.w3-blue-grey(type="submit" value="login")

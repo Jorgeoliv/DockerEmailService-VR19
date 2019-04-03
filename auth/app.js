@@ -21,6 +21,7 @@ var usersRouter = require('./routes/users');
 var app = express();
 
 var containerName = 'mongodb'//"localhost"
+const UserModel = require('./models/user')
 
 //Base de dados
 mongoose.connect('mongodb://' + containerName + ':27017/dweb13', {useNewUrlParser: true})
@@ -52,6 +53,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/s1/api/users', usersAPIRouter)
 app.use('/s1', indexRouter);
 app.use('/s1/users', usersRouter);
+app.use('/s1/s1/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -68,5 +70,9 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+UserModel.updateMany({}, {$set: {"token": ""}})
+  .then(dados => {console.log('ALTEROU COM SUCESSO: '); console.dir(dados)})
+  .catch(erro => console.log('Deu erro a limpar os tokens: ' + erro))
 
 module.exports = app;

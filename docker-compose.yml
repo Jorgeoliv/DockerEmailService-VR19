@@ -9,6 +9,7 @@ services:
       - 443:443
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./stylesheets/style.css:/etc/nginx/html/stylesheets/style.css
     depends_on:
       - autenticacao
       - servidoremail

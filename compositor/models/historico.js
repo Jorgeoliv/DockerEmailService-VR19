@@ -5,7 +5,8 @@ const Schema = mongoose.Schema
 const emailSchema = new Schema({
     to: {type: String},
     subject: {type: String},
-    body: {type: String}
+    body: {type: String},
+    data: {type: String}
 })
 
 var HistoricoSchema = new Schema({

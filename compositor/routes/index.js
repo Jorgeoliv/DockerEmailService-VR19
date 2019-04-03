@@ -49,7 +49,7 @@ router.get('/enviaEmail', function(req, res, next) {
           const uniq = [...new Set(dados[0].to[0])]
           console.log("Olha unicamente para mim: " + uniq)
           console.log("VOu ver o primeiro elemeto: " + uniq[0])
-          res.render('compositor',{info: mailLocal, recetor: uniq})
+          res.render('compositor',{info: mailLocal, mail: mailOriginal, token: req.query.token, recetor: uniq})
         })
         .catch(error => {
           console.log("Deu erro no aggregate: " + error)
@@ -86,6 +86,15 @@ router.post('/enviaEmail', (req, res) => {
       emailS.to = mailOptions.to
       emailS.subject = mailOptions.subject
       emailS.body = req.body.texto
+      let today = new Date()
+      let dd = today.getDate()
+      let mm = today.getMonth() + 1 //January is 0!
+      let yyyy = today.getFullYear();
+      let hour = today.getHours()
+      let minute = today.getMinutes()
+
+      emailS.data = dd + '/' + mm + '/' + yyyy + ' ' + hour + ':' + minute;
+      
       console.log("Vou analisar o objeto:")
       console.dir(emailS)
       HistoricoModel.findOneAndUpdate({email: mailOptions.from}, {$push: {mails: emailS}}, {upsert: true, new: true})
@@ -137,36 +146,5 @@ router.get('/:nomeAutor', (req, res) => {
       res.render("error", {message: "Não conseguimos processar a tabela dos emails enviados ..."})
     })
 })
-
-// router.get('/teste', (req, res) => {
-
-//   let mailOptions = {
-//     from: 'jorge10oliveira@gmail.com', // sender address
-//     to: 'jorge10oliveira@gmail.com', // list of receivers
-//     subject: 'Subject of your email', // Subject line
-//     html: '<p>Your html here</p>'// plain text body
-//   }
-
-//   // Now when your send an email, it will show up in the MailDev interface
-//   transporter.sendMail(mailOptions, (error, info) => {
-//     if(error)
-//       console.log(error)
-//     else
-//       console.log(info)
-//   })
-// })
-
-// axios.get('http://localhost:3000/users/info?token=' + req.query.token)
-// .then(mail =>{
-
-// })//recebe o mail com que o login foi feito
-// .catch(erroVerificacao =>{
-//   console.log("ERRO NA CONFIRMAÇÃO DO TOKEN"))
-// })
-// console.log('EU ESTOU AQUI AAQUI PARA TE DIZER')
-// axios.get('http://localhost:3000/users/login')
-//   .then(dados => res.jsonp('Olha um token a sair: ' + dados))
-//   .catch(erro => res.jsonp(erro))
-// //res.render('index', { title: 'Express' });
 
 module.exports = router;
