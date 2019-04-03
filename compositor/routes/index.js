@@ -34,30 +34,6 @@ router.get('/enviaEmail', function(req, res, next) {
   console.log('VOU ENVIAR O EMAILLLLLL!!')
   axios.get('http://' + containerAuth + ':3000/s1/api/users/info?token=' + req.query.token)
     .then(mail =>{
-<<<<<<< HEAD
-      if (mail){
-        console.log('VOU ANALISAR O MEU EMAIL::::::::::::')
-        console.dir(mail.data)
-        var mailOriginal = mail.data.email
-        var mailLocal = mailOriginal.split("@")[0] + "@vr-2.gcom.di.uminho.pt"
-        console.log(mailLocal)
-        HistoricoModel.aggregate([
-          {$group: {_id: "$mails.to"}}
-        ])
-          .then(dados => {
-            console.log("VAMOS VER O QUE DEU NO AGGREGATE")
-            console.dir(dados)
-            res.render('compositor',{info: mailLocal, mail: mailOriginal, token: req.query.token})
-          })
-          .catch(error => {
-            console.log("Deu erro no aggregate: " + error)
-            res.render('compositor',{info: mailLocal, mail: mailOriginal, token: req.query.token})
-          })
-      }
-      else{
-        res.render('error', {message: "TOKEN INVÁLIDO"})
-      }
-=======
       console.log('VOU ANALISAR O MEU EMAIL::::::::::::')
       console.dir(mail.data)
       var mailOriginal = mail.data.email
@@ -80,7 +56,6 @@ router.get('/enviaEmail', function(req, res, next) {
           res.render('compositor',{info: mailLocal})
         })
       
->>>>>>> 04f012c77e84400d619fa3588fef38d6095d320c
     })//recebe o mail com que o login foi feito
     .catch(erroVerificacao =>{
       console.log("ERRO NA CONFIRMAÇÃO DO TOKEN:" + erroVerificacao)
