@@ -34,6 +34,7 @@ router.get('/enviaEmail', function(req, res, next) {
   console.log('VOU ENVIAR O EMAILLLLLL!!')
   axios.get('http://' + containerAuth + ':3000/s1/api/users/info?token=' + req.query.token)
     .then(mail =>{
+<<<<<<< HEAD
       if (mail){
         console.log('VOU ANALISAR O MEU EMAIL::::::::::::')
         console.dir(mail.data)
@@ -56,6 +57,30 @@ router.get('/enviaEmail', function(req, res, next) {
       else{
         res.render('error', {message: "TOKEN INVÁLIDO"})
       }
+=======
+      console.log('VOU ANALISAR O MEU EMAIL::::::::::::')
+      console.dir(mail.data)
+      var mailOriginal = mail.data.email
+      var mailLocal = mailOriginal.split("@")[0] + "@vr-2.gcom.di.uminho.pt"
+      console.log(mailLocal)
+      HistoricoModel.aggregate([
+        {$match: {"email": mailLocal}},
+        {$group: {_id: null, "to": {"$addToSet": "$mails.to"}}}//, : {"$push": "$mails.subject"}, body: {"$push": "$mails.body"}}}
+      ])
+        .then(dados => {
+          console.log("VAMOS VER O QUE DEU NO AGGREGATE")
+          console.dir(dados[0])
+          const uniq = [...new Set(dados[0].to[0])]
+          console.log("Olha unicamente para mim: " + uniq)
+          console.log("VOu ver o primeiro elemeto: " + uniq[0])
+          res.render('compositor',{info: mailLocal, recetor: uniq})
+        })
+        .catch(error => {
+          console.log("Deu erro no aggregate: " + error)
+          res.render('compositor',{info: mailLocal})
+        })
+      
+>>>>>>> 04f012c77e84400d619fa3588fef38d6095d320c
     })//recebe o mail com que o login foi feito
     .catch(erroVerificacao =>{
       console.log("ERRO NA CONFIRMAÇÃO DO TOKEN:" + erroVerificacao)
@@ -117,6 +142,24 @@ router.post('/logout', function(req, res, next) {
         console.log(erro.data)
         res.redirect('http://' + req.hostname + ':80/s2')
       })
+      
+router.get('/:nomeAutor', (req, res) => {
+  console.log('O nome do autor é: ' + req.params.nomeAutor)
+  console.log('O autor logado é: ' + req.query.uti)
+  HistoricoModel.aggregate([
+      {$match: {"email": req.query.uti}},
+      {$unwind: {path: "$mails"}},
+      {$match: {"mails.to": req.params.nomeAutor}}
+    ])
+    .then(dados => {
+      console.log('O que saquei foi: ' + dados)
+      console.dir(dados)
+      res.render('emails', {emails: dados})
+    })
+    .catch(error => {
+      console.log('Deu um erro: ' + error)
+      res.render("error", {message: "Não conseguimos processar a tabela dos emails enviados ..."})
+    })
 })
 
 // router.get('/teste', (req, res) => {

@@ -16,3 +16,12 @@ block content
       input.w3-input.w3-border-w3.light-grey(type='hidden' id='token' name='token' value= token)
       input.w3-btn.w3-blue-grey(type="submit" value="Logout!")
       
+  .w3-container
+    table.w3-table-all
+      tr
+          th(style='width:60%') Recetor
+      each autor in recetor
+          tr
+            td 
+              a(href='http://localhost:80/s2/' + autor + '?uti=' + info)= autor
+
