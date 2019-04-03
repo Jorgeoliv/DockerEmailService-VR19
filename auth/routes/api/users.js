@@ -40,7 +40,6 @@ router.post('/registo', function(req, res, next) {
 //Login
 router.post('/login', async(req, res, next) => {
     console.log('Eu chegei ao login')
-    console.log('lalalala')
     passport.authenticate('login', async(err, user, info) => {
         console.log("AQUIII")
         try{
@@ -84,11 +83,11 @@ router.post('/logout', async(req, res, next) => {
                     UserModel.updateOne({email: req.body.email}, {$set: {token: ""}})
                     .then(_ =>{
                         console.log('FIZ UM LOGOUT')
-                        res.redirect('http://' + req.hostname + ':80/s2')
+                        res.jsonp("Logout feito com sucesso")
                     })
                     .catch(erroToken =>{
                         console.log("ERRO AO FAZER LOGOUT")
-                        res.redirect('http://' + req.hostname + ':80/s2')
+                        res.jsonp("Erro ao fazer Logout")
                     })
                 })
                 .catch()
@@ -103,6 +102,9 @@ router.get('/info', (req, res) => {
         UserModel.findOne({token: req.query.token}, {email: 1, _id: 0})
             .then(email => res.jsonp(email))
             .catch(erro => res.status(500).send('Erro na istagem de utilizadores ' + erro))
+    }
+    else{
+        res.jsonp(null);
     }
     
 })

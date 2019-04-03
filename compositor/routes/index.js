@@ -34,24 +34,28 @@ router.get('/enviaEmail', function(req, res, next) {
   console.log('VOU ENVIAR O EMAILLLLLL!!')
   axios.get('http://' + containerAuth + ':3000/s1/api/users/info?token=' + req.query.token)
     .then(mail =>{
-      console.log('VOU ANALISAR O MEU EMAIL::::::::::::')
-      console.dir(mail.data)
-      var mailOriginal = mail.data.email
-      var mailLocal = mailOriginal.split("@")[0] + "@vr-2.gcom.di.uminho.pt"
-      console.log(mailLocal)
-      HistoricoModel.aggregate([
-        {$group: {_id: "$mails.to"}}
-      ])
-        .then(dados => {
-          console.log("VAMOS VER O QUE DEU NO AGGREGATE")
-          console.dir(dados)
-          res.render('compositor',{info: mailLocal})
-        })
-        .catch(error => {
-          console.log("Deu erro no aggregate: " + error)
-          res.render('compositor',{info: mailLocal})
-        })
-      
+      if (mail){
+        console.log('VOU ANALISAR O MEU EMAIL::::::::::::')
+        console.dir(mail.data)
+        var mailOriginal = mail.data.email
+        var mailLocal = mailOriginal.split("@")[0] + "@vr-2.gcom.di.uminho.pt"
+        console.log(mailLocal)
+        HistoricoModel.aggregate([
+          {$group: {_id: "$mails.to"}}
+        ])
+          .then(dados => {
+            console.log("VAMOS VER O QUE DEU NO AGGREGATE")
+            console.dir(dados)
+            res.render('compositor',{info: mailLocal, mail: mailOriginal, token: req.query.token})
+          })
+          .catch(error => {
+            console.log("Deu erro no aggregate: " + error)
+            res.render('compositor',{info: mailLocal, mail: mailOriginal, token: req.query.token})
+          })
+      }
+      else{
+        res.render('error', {message: "TOKEN INVÁLIDO"})
+      }
     })//recebe o mail com que o login foi feito
     .catch(erroVerificacao =>{
       console.log("ERRO NA CONFIRMAÇÃO DO TOKEN:" + erroVerificacao)
@@ -97,6 +101,22 @@ router.post('/enviaEmail', (req, res) => {
     }
   })
 
+})
+
+router.post('/logout', function(req, res, next) {
+  console.log("NO LOGOUT")
+  console.log("MAIL => " + req.body.mail)
+  console.log("TOKEN => " + req.body.token)
+
+  axios.post('http://' + containerAuth + ':3000/s1/api/users/logout', {email: req.body.mail, token: req.body.token})
+      .then(msg =>{
+        console.log(msg.data)
+        res.redirect('http://' + req.hostname + ':80/s2')
+      })
+      .catch(erro =>{
+        console.log(erro.data)
+        res.redirect('http://' + req.hostname + ':80/s2')
+      })
 })
 
 // router.get('/teste', (req, res) => {
