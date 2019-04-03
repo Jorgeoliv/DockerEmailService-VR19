@@ -10,3 +10,12 @@ block content
       textarea.w3-input.w3-border.w3-light-grey(name='texto' id='texto' rows='3' cols='80')
       input.w3-input.w3-border-w3.light-grey(type='hidden' id='from' name='from' value= info)
       input.w3-btn.w3-blue-grey(type="submit" value="Enviar!")
+  .w3-container
+    table.w3-table-all
+      tr
+          th(style='width:60%') Recetor
+      each autor in recetor
+          tr
+            td 
+              a(href='http://localhost:80/s2/' + autor + '?uti=' + info)= autor
+
