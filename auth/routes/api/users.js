@@ -31,7 +31,7 @@ router.post('/registo', function(req, res, next) {
         console.log("Passport já atuou")
         console.log("User : " + user)
 
-        res.redirect("/s1/users/login")
+        res.redirect("/servicoautenticacao/users/login")
         
         //return res.jsonp(user)
     })(req, res, next);
@@ -61,11 +61,11 @@ router.post('/login', async(req, res, next) => {
                 UserModel.updateOne({email: user.email}, {$set: {token: token}})
                 .then(_ =>{
                     console.log('FIZ UM UPDATE UPDATE UPDATE UHUHUH')
-                   res.redirect('http://' + req.hostname + ':80/s2/enviaEmail?token='+token)
+                   res.redirect('http://' + req.hostname + ':80/servicoemail/enviaEmail?token='+token)
                 })
                 .catch(erroToken =>{
                     console.log("ERRO AO INSERIR TOKEN")
-                    res.redirect('http://' + req.hostname + ':80/s2/enviaEmail')
+                    res.redirect('http://' + req.hostname + ':80/servicoemail/enviaEmail')
                 })
 
             })

@@ -25,14 +25,14 @@ const transporter = nodemailer.createTransport({
 router.get('/', function(req, res, next) {
   //res.redirect('http://localhost:3000/users')
   console.log('VAMOS VER: ' + req.hostname)
-  res.redirect('http://' + req.hostname + ':80/s1/users')
+  res.redirect('http://' + req.hostname + ':80/servicoautenticacao/users')
 });
 
 router.get('/enviaEmail', function(req, res, next) {
   console.dir(req.query.token)
   //res.jsonp(req.query.token)
   console.log('VOU ENVIAR O EMAILLLLLL!!')
-  axios.get('http://' + containerAuth + ':3000/s1/api/users/info?token=' + req.query.token)
+  axios.get('http://' + containerAuth + ':3000/servicoautenticacao/api/users/info?token=' + req.query.token)
     .then(mail =>{
       console.log('VOU ANALISAR O MEU EMAIL::::::::::::')
       console.dir(mail.data)
@@ -53,13 +53,14 @@ router.get('/enviaEmail', function(req, res, next) {
         })
         .catch(error => {
           console.log("Deu erro no aggregate: " + error)
-          res.render('compositor',{info: mailLocal})
+          res.render('compositor',{info: mailLocal, mail: mailOriginal, token: req.query.token})
         })
       
     })//recebe o mail com que o login foi feito
     .catch(erroVerificacao =>{
       console.log("ERRO NA CONFIRMAÇÃO DO TOKEN:" + erroVerificacao)
-      res.render('error', {message: 'A autenticação não é válida ...'})
+      res.redirect('http://' + req.hostname + ':80/servicoautenticacao/users')
+      // res.render('error', {message: 'A autenticação não é válida ...'})
     })
 });
 
@@ -117,14 +118,14 @@ router.post('/logout', function(req, res, next) {
   console.log("MAIL => " + req.body.mail)
   console.log("TOKEN => " + req.body.token)
 
-  axios.post('http://' + containerAuth + ':3000/s1/api/users/logout', {email: req.body.mail, token: req.body.token})
+  axios.post('http://' + containerAuth + ':3000/servicoautenticacao/api/users/logout', {email: req.body.mail, token: req.body.token})
       .then(msg =>{
         console.log(msg.data)
-        res.redirect('http://' + req.hostname + ':80/s2')
+        res.redirect('http://' + req.hostname + ':80/servicoemail')
       })
       .catch(erro =>{
         console.log(erro.data)
-        res.redirect('http://' + req.hostname + ':80/s2')
+        res.redirect('http://' + req.hostname + ':80/servicoemail')
       })
   })
 
