@@ -1,2 +1,2 @@
 # DockerEmailService-VR19
-Use Docker to offer an email service
+This app uses Docker to offer an email service
