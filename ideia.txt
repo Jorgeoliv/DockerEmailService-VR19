@@ -1,6 +1,0 @@
-O WebServiceEmail deve de redirecionar o login/registo para o WebServiceAuth
-O WebServiceAuth após validar a autenticação envia um token para o WebServiceEmail
-Quando o WebServiceEmail recebe o token deve perguntar ao WebServiceAuth se o token é valido
-Caso o WebServiceAuth valide o token deve de enviar os dados (email?, nome?, password?) para o WebServiceEmail
-
-Ambos devem de apresentar um serviço de front-end
